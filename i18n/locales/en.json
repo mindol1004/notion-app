@@ -1,0 +1,71 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "preview": "Preview",
+    "search": "Search",
+    "settings": "Settings",
+    "close": "Close",
+    "back": "Back",
+    "create": "Create",
+    "fillAllFields": "Please fill all fields",
+    "registerSuccess": "Registration successful!",
+    "loginSuccess": "Login successful!",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "register": "Sign Up",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginError": "Login failed",
+    "loading": "Loading...",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Please enter a valid email",
+    "passwordRequired": "Please enter your password",
+    "passwordMin": "Password must be at least 6 characters"
+  },
+  "sidebar": {
+    "workspace": "Workspace",
+    "pages": "Pages",
+    "searchPages": "Search pages...",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "untitled": "Untitled"
+  },
+  "editor": {
+    "untitled": "Untitled",
+    "startWriting": "Start writing...",
+    "createdAt": "Created",
+    "updatedAt": "Updated",
+    "lastEdited": "Last edited"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "language": "Language",
+    "theme": "Theme",
+    "appearance": "Appearance",
+    "about": "About",
+    "version": "Version",
+    "selectLanguage": "Select Language",
+    "selectTheme": "Select Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "korean": "한국어",
+    "english": "English",
+    "description": "Manage your workspace settings.",
+    "languageDescription": "Choose your interface language.",
+    "themeDescription": "Choose your app appearance."
+  },
+  "welcome": {
+    "title": "Welcome to Your Workspace",
+    "content": "# Welcome to Your Workspace\n\nThis is your personal workspace where you can create, organize, and manage your notes and documents.\n\n## Getting Started\n\n- Click the + button to create a new page\n- Use the sidebar to navigate between pages\n- Start typing to edit this page\n\n## Features\n\n- **Clean Interface**: Distraction-free writing environment\n- **Quick Search**: Find your content instantly\n- **Responsive Design**: Works on all devices\n- **Dark Mode**: Easy on the eyes\n- **Multi-language**: Supports Korean and English\n\nStart creating your first page and organize your thoughts!",
+    "desc": "A simple and powerful note web app like Notion",
+    "slogan": "Experience the best note-taking for productivity!",
+    "login": "Login",
+    "register": "Sign Up"
+  }
+}
