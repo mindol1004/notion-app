@@ -5,6 +5,3 @@ export interface Editor {
   createdAt: Date
   updatedAt: Date
 }
-
-export type ViewMode = "editor" | "settings"
-export type ThemeMode = "light" | "dark" | "system"

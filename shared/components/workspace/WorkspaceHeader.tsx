@@ -1,7 +1,6 @@
 "use client"
 
 import { MoreHorizontal, Sun, Moon, Settings } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,38 +10,23 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar } from "../common/Avatar"
 import { Icon } from "../common/Icon"
-import { useTheme } from "@/shared/hooks/use-theme"
-import { useI18n } from "@/shared/hooks/use-i18n"
-import { useUI } from "@/shared/hooks/use-ui"
-import { useMobile } from "@/shared/hooks/use-mobile"
+import { useWorkspaceHeaderLogic } from "./hooks/use-workspace-header-logic"
 
 export function WorkspaceHeader() {
-  const { isDarkMode, toggleTheme } = useTheme()
-  const { t } = useI18n()
-  const { setViewMode } = useUI()
-  const isMobile = useMobile()
-
-  const handleSettingsClick = () => {
-    setViewMode("settings")
-    if (isMobile) {
-      const sidebarTrigger = document.querySelector('[data-sidebar="trigger"]') as HTMLButtonElement
-      sidebarTrigger?.click()
-    }
-  }
+  const { isDarkMode, t, toggleTheme, handleSettingsClick } = useWorkspaceHeaderLogic()
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <div className="flex items-center gap-2">
         <Avatar fallback="W" size="md" />
         <span className="font-semibold text-sm">{t.sidebar.workspace}</span>
       </div>
+
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-            <Icon icon={MoreHorizontal} />
-          </Button>
+        <DropdownMenuTrigger className="flex items-center justify-center h-6 w-6 rounded hover:bg-accent transition-colors focus:outline-none focus-visible:outline-none focus-visible:ring-0">
+          <MoreHorizontal className="h-4 w-4" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem onClick={toggleTheme}>
             <Icon icon={isDarkMode ? Sun : Moon} className="mr-2" />
             {isDarkMode ? t.sidebar.lightMode : t.sidebar.darkMode}

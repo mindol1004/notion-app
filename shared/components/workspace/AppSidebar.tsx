@@ -17,50 +17,11 @@ import { WorkspaceHeader } from "./WorkspaceHeader"
 import { SearchBox } from "../common/SearchBox"
 import { EditorListItem } from "../editor/EditorListItem"
 import { Icon } from "../common/Icon"
-import { useEditor } from "@/shared/hooks/use-editor"
-import { useI18n } from "@/shared/hooks/use-i18n"
-import { useUI } from "@/shared/hooks/use-ui"
-import { useMemo } from "react"
+import { useSidebarLogic } from "./hooks/use-sidebar-logic"
 
 export function AppSidebar() {
-  const { editors, createNewEditor, updateEditor } = useEditor()
-  const { t } = useI18n()
-  const { searchQuery, setIsEditing, setViewMode, setSearchQuery } = useUI()
-
-  const { filteredEditors, showCreateOption } = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim()
-
-    if (!query) {
-      return { filteredEditors: editors, showCreateOption: false }
-    }
-
-    const filtered = editors.filter(
-      (editor) => editor.title.toLowerCase().includes(query) || editor.content.toLowerCase().includes(query),
-    )
-
-    const exactMatch = editors.some((editor) => editor.title.toLowerCase() === query)
-
-    return {
-      filteredEditors: filtered,
-      showCreateOption: query.length > 0 && !exactMatch,
-    }
-  }, [editors, searchQuery])
-
-  const handleCreateEditor = () => {
-    createNewEditor()
-    setIsEditing(true)
-    setViewMode("editor")
-  }
-
-  const handleCreateSearchEditor = () => {
-    const newEditor = createNewEditor()
-    if (searchQuery.trim()) {
-      updateEditor(newEditor.id, { title: searchQuery.trim() })
-    }
-    setIsEditing(true)
-    setViewMode("editor")
-    setSearchQuery("")
-  }
+  const { filteredEditors, showCreateOption, searchQuery, t, handleCreateEditor, handleCreateSearchEditor } =
+    useSidebarLogic()
 
   return (
     <TooltipProvider>
@@ -79,9 +40,12 @@ export function AppSidebar() {
           <SidebarGroup>
             <SidebarGroupLabel className="flex items-center justify-between px-2">
               <span>{t.sidebar.pages}</span>
-              <Button variant="ghost" size="sm" onClick={handleCreateEditor} className="h-5 w-5 p-0 hover:bg-accent">
-                <Icon icon={Plus} size="sm" />
-              </Button>
+              <button
+                onClick={handleCreateEditor}
+                className="flex items-center justify-center h-5 w-5 rounded hover:bg-accent transition-colors"
+              >
+                <Plus className="h-3 w-3" />
+              </button>
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>

@@ -1,7 +1,7 @@
 "use client"
 
 import { create } from "zustand"
-import type { ViewMode } from "@/types"
+import type { ViewMode } from "@/shared/types/common"
 
 interface UIState {
   isEditing: boolean

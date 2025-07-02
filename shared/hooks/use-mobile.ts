@@ -1,18 +1,19 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { BREAKPOINTS } from "@/shared/constants"
+
+const MOBILE_BREAKPOINT = 768
 
 /**
  * Pure React hook that returns `true` when the viewport width is below the
- * `BREAKPOINTS.MOBILE` threshold. No global state, no side-effects → no loops.
+ * `MOBILE_BREAKPOINT` threshold. No global state, no side-effects → no loops.
  */
 export function useMobile() {
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < BREAKPOINTS.MOBILE)
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
     }
 
     handleResize() // initial run

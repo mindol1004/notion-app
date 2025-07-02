@@ -2,14 +2,14 @@
 
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { Editor } from "@/types"
+import type { Editor } from "@/shared/components/editor/types/editor"
 
 interface EditorState {
   editors: Editor[]
   currentEditorId: string
   currentEditor: Editor | undefined
   isInitialized: boolean
-  createNewEditor: () => Editor
+  createNewEditor: (initialTitle?: string) => Editor
   updateEditor: (id: string, updates: Partial<Editor>) => void
   deleteEditor: (id: string) => void
   setCurrentEditorId: (id: string) => void
@@ -24,11 +24,11 @@ export const useEditorStore = create<EditorState>()(
       currentEditor: undefined,
       isInitialized: false,
 
-      createNewEditor: () => {
+      createNewEditor: (initialTitle = "") => {
         const { editors } = get()
         const newEditor: Editor = {
           id: `editor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          title: "",
+          title: initialTitle,
           content: "",
           createdAt: new Date(),
           updatedAt: new Date(),

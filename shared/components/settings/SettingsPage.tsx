@@ -8,28 +8,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Icon } from "../common/Icon"
-import { useTheme } from "@/shared/hooks/use-theme"
-import { useI18n } from "@/shared/hooks/use-i18n"
-import { useUI } from "@/shared/hooks/use-ui"
-import type { Locale } from "@/i18n/locales"
-import type { ThemeMode } from "@/types"
+import { useSettingsLogic } from "./hooks/use-settings-logic"
 
 export function SettingsPage() {
-  const { isDarkMode, setTheme } = useTheme()
-  const { locale, t, changeLanguage } = useI18n()
-  const { setViewMode } = useUI()
-
-  const handleThemeChange = (theme: string) => {
-    setTheme(theme as ThemeMode)
-  }
-
-  const handleLanguageChange = (newLocale: string) => {
-    changeLanguage(newLocale as Locale)
-  }
-
-  const handleBack = () => {
-    setViewMode("editor")
-  }
+  const { theme, isDarkMode, locale, t, handleThemeChange, handleLanguageChange, handleBack } = useSettingsLogic()
 
   return (
     <div className="flex flex-col h-full">
@@ -85,11 +67,7 @@ export function SettingsPage() {
               <CardContent>
                 <div className="space-y-3">
                   <Label>{t.settings.selectTheme}</Label>
-                  <RadioGroup
-                    value={isDarkMode ? "dark" : "light"}
-                    onValueChange={handleThemeChange}
-                    className="grid grid-cols-3 gap-4"
-                  >
+                  <RadioGroup value={theme} onValueChange={handleThemeChange} className="grid grid-cols-3 gap-4">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="light" id="light" />
                       <Label htmlFor="light">{t.settings.light}</Label>

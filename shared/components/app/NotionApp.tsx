@@ -1,25 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { AppLayout } from "./AppLayout"
 import { Editor } from "../editor/Editor"
 import { SettingsPage } from "../settings/SettingsPage"
-import { useI18n } from "@/shared/hooks/use-i18n"
-import { useEditor } from "@/shared/hooks/use-editor"
-import { useUI } from "@/shared/hooks/use-ui"
+import { AppLayout } from "./AppLayout"
+import { useAppLogic } from "./hooks/use-app-logic"
+import { useThemeEffect } from "@/shared/stores/theme-store"
 
 function NotionAppContent() {
-  const { t } = useI18n()
-  const { isInitialized, initializeEditors } = useEditor()
-  const { viewMode } = useUI()
-  const [appReady, setAppReady] = useState(false)
+  const { appReady, isInitialized, isDarkMode, viewMode } = useAppLogic()
 
-  useEffect(() => {
-    if (!isInitialized && !appReady) {
-      initializeEditors(t.welcome.title, t.welcome.content)
-      setAppReady(true)
-    }
-  }, [isInitialized, appReady, initializeEditors, t.welcome.title, t.welcome.content])
+  // 테마 효과 적용
+  useThemeEffect()
 
   if (!appReady || !isInitialized) {
     return (

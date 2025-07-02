@@ -4,18 +4,14 @@ import { Search, X } from "lucide-react"
 import { SidebarInput } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { Icon } from "./Icon"
-import { useUI } from "@/shared/hooks/use-ui"
+import { useSearchBoxLogic } from "./hooks/use-search-box-logic"
 
 interface SearchBoxProps {
   placeholder: string
 }
 
 export function SearchBox({ placeholder }: SearchBoxProps) {
-  const { searchQuery, setSearchQuery } = useUI()
-
-  const handleClear = () => {
-    setSearchQuery("")
-  }
+  const { searchQuery, setSearchQuery, handleClear } = useSearchBoxLogic()
 
   return (
     <div className="relative">
