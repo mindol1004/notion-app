@@ -22,7 +22,7 @@ export function RegisterForm(props: RegisterFormProps) {
         <input
           name="name"
           type="text"
-          placeholder={t('common.name')}
+          placeholder={t('auth.name')}
           className="pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white w-full"
           value={values.name || ""}
           onChange={handleChange}
@@ -34,7 +34,7 @@ export function RegisterForm(props: RegisterFormProps) {
         <input
           name="email"
           type="email"
-          placeholder={t('common.email')}
+          placeholder={t('auth.email')}
           className="pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white w-full"
           value={values.email}
           onChange={handleChange}
@@ -46,7 +46,7 @@ export function RegisterForm(props: RegisterFormProps) {
         <input
           name="password"
           type="password"
-          placeholder={t('common.password')}
+          placeholder={t('auth.password')}
           className="pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white w-full"
           value={values.password}
           onChange={handleChange}
@@ -60,7 +60,7 @@ export function RegisterForm(props: RegisterFormProps) {
         whileTap={{ scale: 0.97 }}
         disabled={loading}
       >
-        {loading ? t('common.loading') : t('common.register')}
+        {loading ? t('common.loading') : t('auth.register')}
       </motion.button>
     </motion.form>
   );

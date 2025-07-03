@@ -17,7 +17,7 @@ export function useRegisterLogic(props: RegisterFormProps) {
 
     const result = registerSchema.safeParse(values);
     if (!result.success) {
-      const errorKey = result.error.errors[0]?.message || 'common.unknownError';
+      const errorKey = result.error.errors[0]?.message || 'auth.unknownError';
       setLocalError(errorKey);
       setLoading(false);
       props.onError?.(result.error);
@@ -35,14 +35,14 @@ export function useRegisterLogic(props: RegisterFormProps) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setLocalError(errorData.message || 'common.registrationError');
+        setLocalError(errorData.message || 'auth.registrationError');
         props.onError?.(new Error(errorData.message || 'Registration failed'));
       } else {
         props.onSuccess?.(result.data);
         router.push("/login"); // Redirect to login page after successful registration
       }
     } catch (error) {
-      setLocalError('common.registrationError');
+      setLocalError('auth.registrationError');
       props.onError?.(error as Error);
     }
     setLoading(false);

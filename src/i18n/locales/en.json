@@ -11,6 +11,9 @@
     "back": "Back",
     "create": "Create",
     "fillAllFields": "Please fill all fields",
+    "loading": "Loading..."
+  },
+  "auth": {
     "registerSuccess": "Registration successful!",
     "loginSuccess": "Login successful!",
     "name": "Name",
@@ -22,7 +25,7 @@
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "loginError": "Login failed",
-    "loading": "Loading...",
+    "registrationError": "Registration failed",
     "emailRequired": "Please enter your email",
     "emailInvalid": "Please enter a valid email",
     "passwordRequired": "Please enter your password",

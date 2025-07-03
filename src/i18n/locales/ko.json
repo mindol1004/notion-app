@@ -7,10 +7,13 @@
     "preview": "미리보기",
     "search": "검색",
     "settings": "설정",
-    "close": "닫기",
+    "close": "닫기",    
     "back": "뒤로",
     "create": "생성",
     "fillAllFields": "모든 필드를 입력하세요",
+    "loading": "로딩중..."
+  },
+  "auth": {
     "registerSuccess": "회원가입 성공!",
     "loginSuccess": "로그인 성공!",
     "name": "이름",
@@ -22,7 +25,7 @@
     "noAccount": "계정이 없으신가요?",
     "hasAccount": "이미 계정이 있으신가요?",
     "loginError": "로그인 실패",
-    "loading": "로딩중...",
+    "registrationError": "회원가입 실패",
     "emailRequired": "이메일을 입력하세요",
     "emailInvalid": "유효한 이메일을 입력하세요",
     "passwordRequired": "비밀번호를 입력하세요",

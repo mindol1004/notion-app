@@ -28,7 +28,7 @@ export default function RegisterPage() {
           transition={{ delay: 0.2, duration: 0.7 }}
         >
           <UserPlus className="w-7 h-7 text-blue-500" />
-          {t('common.register')}
+          {t('auth.register')}
         </motion.h2>
         <RegisterForm onSuccess={() => router.push("/login")} />
         <motion.div
@@ -37,10 +37,10 @@ export default function RegisterPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
-          <span className="text-sm text-gray-500">{t('common.hasAccount')}</span>
+          <span className="text-sm text-gray-500">{t('auth.hasAccount')}</span>
           <Link href="/login" className="flex items-center gap-1 text-blue-500 hover:underline font-medium">
             <ArrowLeft className="w-4 h-4 rotate-180" />
-            {t('common.login')}
+            {t('auth.login')}
           </Link>
         </motion.div>
       </motion.div>

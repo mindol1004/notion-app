@@ -39,7 +39,7 @@ export default function LoginPage() {
           transition={{ delay: 0.2, duration: 0.7 }}
         >
           <Lock className="w-7 h-7 text-blue-500" />
-          {t('common.login')}
+          {t('auth.login')}
         </motion.h2>
         <LoginForm onSuccess={() => router.push("/workspace")} />
         <div className="flex items-center gap-2 my-2">
@@ -71,10 +71,10 @@ export default function LoginPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
-          <span className="text-sm text-gray-500">{t('common.noAccount')}</span>
+          <span className="text-sm text-gray-500">{t('auth.noAccount')}</span>
           <Link href="/register" className="flex items-center gap-1 text-blue-500 hover:underline font-medium">
             <ArrowLeft className="w-4 h-4 rotate-180" />
-            {t('common.register')}
+            {t('auth.register')}
           </Link>
         </motion.div>
       </motion.div>

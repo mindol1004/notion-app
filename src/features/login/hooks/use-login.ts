@@ -16,7 +16,7 @@ export function useLoginLogic(props: LoginFormProps) {
 
     const result = loginSchema.safeParse(values);
     if (!result.success) {
-      const errorKey = result.error.errors[0]?.message || 'common.unknownError';
+      const errorKey = result.error.errors[0]?.message || 'auth.unknownError';
       setLocalError(errorKey);
       setLoading(false);
       props.onError?.(result.error);
@@ -31,13 +31,13 @@ export function useLoginLogic(props: LoginFormProps) {
       });
 
       if (signInResult?.error) {
-        setLocalError('common.loginError');
+        setLocalError('auth.loginError');
         props.onError?.(new Error(signInResult.error));
       } else {
         props.onSuccess?.(result.data);
       }
     } catch (error) {
-      setLocalError('common.loginError');
+      setLocalError('auth.loginError');
       props.onError?.(error as Error);
     }
     setLoading(false);
