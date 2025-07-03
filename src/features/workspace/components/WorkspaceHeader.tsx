@@ -41,7 +41,7 @@ export function WorkspaceHeader() {
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout}>
             <Icon icon={LogOut} className="mr-2" />
-            {t('common.logout')}
+            {t('auth.logout')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
