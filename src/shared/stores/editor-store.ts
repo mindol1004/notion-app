@@ -1,154 +1,164 @@
 "use client"
 
 import { create } from "zustand"
-import { persist } from "zustand/middleware"
-import type { Editor } from "@/shared/components/editor/types/editor"
+import type { Editor } from "@/features/editor/types/editor"
 
 interface EditorState {
   editors: Editor[]
   currentEditorId: string
   currentEditor: Editor | undefined
-  isInitialized: boolean
-  createNewEditor: (initialTitle?: string) => Editor
-  updateEditor: (id: string, updates: Partial<Editor>) => void
-  deleteEditor: (id: string) => void
+  isLoading: boolean
+  error: string | null
+  setEditors: (editors: Editor[]) => void
   setCurrentEditorId: (id: string) => void
-  initializeEditors: (welcomeTitle: string, welcomeContent: string) => void
+  updateEditor: (id: string, updates: Partial<Editor>) => void
+  fetchEditors: () => Promise<void>
+  createNewEditor: (initialTitle?: string) => Promise<Editor | undefined>
+  deleteEditor: (id: string) => Promise<void>
 }
 
 export const useEditorStore = create<EditorState>()(
-  persist(
-    (set, get) => ({
-      editors: [],
-      currentEditorId: "",
-      currentEditor: undefined,
-      isInitialized: false,
+  (set, get) => ({
+    editors: [],
+    currentEditorId: "",
+    currentEditor: undefined,
+    isLoading: false,
+    error: null,
 
-      createNewEditor: (initialTitle = "") => {
-        const { editors } = get()
-        const newEditor: Editor = {
-          id: `editor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          title: initialTitle,
-          content: "",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
+    setEditors: (editors: Editor[]) => {
+      let currentEditorId = get().currentEditorId
+      let currentEditor = get().currentEditor
 
-        set({
-          editors: [...editors, newEditor],
-          currentEditorId: newEditor.id,
-          currentEditor: newEditor,
-        })
-
-        return newEditor
-      },
-
-      updateEditor: (id: string, updates: Partial<Editor>) => {
-        const { editors, currentEditorId } = get()
-        const updatedEditors = editors.map((editor) =>
-          editor.id === id ? { ...editor, ...updates, updatedAt: new Date() } : editor,
-        )
-        const updatedCurrentEditor =
-          currentEditorId === id ? updatedEditors.find((editor) => editor.id === id) : get().currentEditor
-
-        set({
-          editors: updatedEditors,
-          currentEditor: updatedCurrentEditor,
-        })
-      },
-
-      deleteEditor: (id: string) => {
-        const { editors, currentEditorId } = get()
-        const newEditors = editors.filter((editor) => editor.id !== id)
-
-        if (newEditors.length === 0) {
-          set({
-            editors: [],
-            currentEditorId: "",
-            currentEditor: undefined,
-          })
+      if (!currentEditorId || !editors.some(e => e.id === currentEditorId)) {
+        if (editors.length > 0) {
+          currentEditorId = editors[0].id
+          currentEditor = editors[0]
         } else {
-          const newCurrentEditorId = currentEditorId === id ? newEditors[0].id : currentEditorId
-          const newCurrentEditor = newEditors.find((editor) => editor.id === newCurrentEditorId)
-          set({
+          currentEditorId = ""
+          currentEditor = undefined
+        }
+      }
+
+      set({
+        editors: editors,
+        currentEditorId: currentEditorId,
+        currentEditor: currentEditor,
+      })
+    },
+
+    updateEditor: (id: string, updates: Partial<Editor>) => {
+      const { editors, currentEditorId } = get()
+      const updatedEditors = editors.map((editor) =>
+        editor.id === id ? { ...editor, ...updates, updatedAt: new Date() } : editor,
+      )
+      const updatedCurrentEditor =
+        currentEditorId === id ? updatedEditors.find((editor) => editor.id === id) : get().currentEditor
+
+      set({
+        editors: updatedEditors,
+        currentEditor: updatedCurrentEditor,
+      })
+    },
+
+    setCurrentEditorId: (id: string) => {
+      const { editors } = get()
+      const editor = editors.find((e) => e.id === id)
+      if (editor) {
+        set({
+          currentEditorId: id,
+          currentEditor: editor,
+        })
+      }
+    },
+
+    fetchEditors: async () => {
+      set({ isLoading: true, error: null })
+      try {
+        const response = await fetch('/api/editor/list')
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const data: Editor[] = await response.json()
+        const editorsWithDates = data.map(editor => ({
+          ...editor,
+          createdAt: new Date(editor.createdAt),
+          updatedAt: new Date(editor.updatedAt),
+        }))
+        get().setEditors(editorsWithDates)
+        set({ isLoading: false })
+      } catch (error: any) {
+        console.error("Failed to fetch editors:", error)
+        set({ isLoading: false, error: error.message })
+      }
+    },
+
+    createNewEditor: async (initialTitle = "") => {
+      set({ isLoading: true, error: null })
+      try {
+        const response = await fetch('/api/editor/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ title: initialTitle }),
+        })
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const newEditor: Editor = await response.json()
+        const editorWithDates = {
+          ...newEditor,
+          createdAt: new Date(newEditor.createdAt),
+          updatedAt: new Date(newEditor.updatedAt),
+        }
+        set(state => ({
+          editors: [...state.editors, editorWithDates],
+          currentEditorId: editorWithDates.id,
+          currentEditor: editorWithDates,
+          isLoading: false,
+        }))
+        return editorWithDates
+      } catch (error: any) {
+        console.error("Failed to create editor:", error)
+        set({ isLoading: false, error: error.message })
+        return undefined
+      }
+    },
+
+    deleteEditor: async (id: string) => {
+      set({ isLoading: true, error: null })
+      try {
+        const response = await fetch('/api/editor/delete', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ editorId: id }),
+        })
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        set(state => {
+          const newEditors = state.editors.filter(editor => editor.id !== id)
+          let newCurrentEditorId = state.currentEditorId
+          let newCurrentEditor = state.currentEditor
+
+          if (newCurrentEditorId === id) {
+            newCurrentEditorId = newEditors.length > 0 ? newEditors[0].id : ""
+            newCurrentEditor = newEditors.length > 0 ? newEditors[0] : undefined
+          }
+
+          return {
             editors: newEditors,
             currentEditorId: newCurrentEditorId,
             currentEditor: newCurrentEditor,
-          })
-        }
-      },
-
-      setCurrentEditorId: (id: string) => {
-        const { editors } = get()
-        const editor = editors.find((e) => e.id === id)
-        if (editor) {
-          set({
-            currentEditorId: id,
-            currentEditor: editor,
-          })
-        }
-      },
-
-      initializeEditors: (welcomeTitle: string, welcomeContent: string) => {
-        const { editors, isInitialized } = get()
-
-        if (isInitialized) return
-
-        if (editors.length === 0) {
-          const welcomeEditor: Editor = {
-            id: "welcome-editor",
-            title: welcomeTitle,
-            content: welcomeContent,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            isLoading: false,
           }
-
-          set({
-            editors: [welcomeEditor],
-            currentEditorId: welcomeEditor.id,
-            currentEditor: welcomeEditor,
-            isInitialized: true,
-          })
-        } else {
-          let { currentEditorId } = get()
-
-          if (!currentEditorId || !editors.find((e) => e.id === currentEditorId)) {
-            currentEditorId = editors[0].id
-          }
-
-          const currentEditor = editors.find((e) => e.id === currentEditorId)
-
-          set({
-            currentEditorId,
-            currentEditor,
-            isInitialized: true,
-          })
-        }
-      },
-    }),
-    {
-      name: "editor-storage",
-      partialize: (state) => ({
-        editors: state.editors.map((editor) => ({
-          ...editor,
-          createdAt: editor.createdAt.toISOString(),
-          updatedAt: editor.updatedAt.toISOString(),
-        })),
-        currentEditorId: state.currentEditorId,
-      }),
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          state.editors = state.editors.map((editor) => ({
-            ...editor,
-            createdAt: new Date(editor.createdAt),
-            updatedAt: new Date(editor.updatedAt),
-          }))
-
-          if (state.currentEditorId) {
-            state.currentEditor = state.editors.find((e) => e.id === state.currentEditorId)
-          }
-        }
-      },
+        })
+      } catch (error: any) {
+        console.error("Failed to delete editor:", error)
+        set({ isLoading: false, error: error.message })
+      }
     },
-  ),
+  }),
 )

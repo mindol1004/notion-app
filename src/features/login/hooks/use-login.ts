@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { LoginFormProps, LoginFormValues, loginSchema } from "../types/login-type";
-import { useTranslation } from "react-i18next";
 import { signIn } from "next-auth/react";
 
 export function useLoginLogic(props: LoginFormProps) {
-  const { t } = useTranslation();
   const [values, setValues] = useState<LoginFormValues>({ email: "", password: "" });
   const [localError, setLocalError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);

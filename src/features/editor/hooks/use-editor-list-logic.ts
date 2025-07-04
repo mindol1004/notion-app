@@ -29,12 +29,8 @@ export function useEditorListLogic(editor: Editor) {
     }
   }
 
-  const handleDelete = () => {
-    try {
-      deleteEditor(editor.id)
-    } catch (error) {
-      console.error("Error deleting editor:", error)
-    }
+  const handleDelete = async () => {
+    await deleteEditor(editor.id)
   }
 
   return {

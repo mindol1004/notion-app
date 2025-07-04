@@ -3,9 +3,9 @@ import './globals.css'
 import { Providers } from '@/providers/providers'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Minimal - Notion',
+  description: 'Your personal workspace for notes and documents',
+  generator: 'mindol',
 }
 
 export default function RootLayout({

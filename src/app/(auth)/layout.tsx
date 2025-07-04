@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Authentication - Notion Clone",
+  title: "Minimal - Notion",
   description: "Sign in to your workspace",
 }
 
