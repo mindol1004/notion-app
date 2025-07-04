@@ -3,17 +3,21 @@
 import { useEditorState } from "@/shared/hooks/use-global-state"
 import { useUIState } from "@/shared/hooks/use-global-state"
 import { useTranslation } from "react-i18next"
-import { useCallback, useEffect } from "react"
+import { useCallback, useMemo } from "react"
 import { useDebounce } from "@/shared/hooks/use-debounce"
+
+const EDITOR_CONFIG = {
+  DEBOUNCE_DELAYS: {
+    TITLE: 500,
+    CONTENT: 1000,
+  },
+  NEW_EDITOR_THRESHOLD: 5000, // 5초
+} as const
 
 export function useEditorLogic() {
   const { currentEditor, updateEditor } = useEditorState()
   const { isEditing, setIsEditing } = useUIState()
   const { i18n } = useTranslation()
-
-  // Debounce values for saving to database
-  const debouncedTitle = useDebounce(currentEditor?.title, 1000) // 1 second debounce
-  const debouncedContent = useDebounce(currentEditor?.content, 1000) // 1 second debounce
 
   const saveEditorToDatabase = useCallback(async (editorId: string, data: { title?: string; content?: string }) => {
     try {
@@ -34,38 +38,49 @@ export function useEditorLogic() {
     }
   }, [])
 
-  // Effect to save debounced title to database
-  useEffect(() => {
-    if (currentEditor && debouncedTitle !== undefined && debouncedTitle !== currentEditor.title) {
-      saveEditorToDatabase(currentEditor.id, { title: debouncedTitle })
-    }
-  }, [debouncedTitle, currentEditor, saveEditorToDatabase])
+  // 디바운스된 저장 함수들
+  const debouncedSaveTitle = useDebounce(
+    (editorId: string, title: string) => saveEditorToDatabase(editorId, { title }),
+    EDITOR_CONFIG.DEBOUNCE_DELAYS.TITLE
+  )
 
-  // Effect to save debounced content to database
-  useEffect(() => {
-    if (currentEditor && debouncedContent !== undefined && debouncedContent !== currentEditor.content) {
-      saveEditorToDatabase(currentEditor.id, { content: debouncedContent })
-    }
-  }, [debouncedContent, currentEditor, saveEditorToDatabase])
+  const debouncedSaveContent = useDebounce(
+    (editorId: string, content: string) => saveEditorToDatabase(editorId, { content }),
+    EDITOR_CONFIG.DEBOUNCE_DELAYS.CONTENT
+  )
 
-  const handleTitleChange = (title: string) => {
-    if (currentEditor) {
-      updateEditor(currentEditor.id, { title })
-    }
-  }
+  // 제목 변경 핸들러
+  const handleTitleChange = useCallback((title: string) => {
+    if (!currentEditor) return
+    
+    // 즉시 UI 업데이트
+    updateEditor(currentEditor.id, { title })
+    
+    // 디바운스된 저장
+    debouncedSaveTitle(currentEditor.id, title)
+  }, [currentEditor, updateEditor, debouncedSaveTitle])
 
-  const handleContentChange = (content: string) => {
-    if (currentEditor) {
-      updateEditor(currentEditor.id, { content })
-    }
-  }
+  // 내용 변경 핸들러
+  const handleContentChange = useCallback((content: string) => {
+    if (!currentEditor) return
+    
+    // 즉시 UI 업데이트
+    updateEditor(currentEditor.id, { content })
+    
+    // 디바운스된 저장
+    debouncedSaveContent(currentEditor.id, content)
+  }, [currentEditor, updateEditor, debouncedSaveContent])
 
-  const toggleEditMode = () => {
+  // 편집 모드 토글
+  const toggleEditMode = useCallback(() => {
     setIsEditing(!isEditing)
-  }
+  }, [isEditing, setIsEditing])
 
-  // 새로 생성된 에디터인지 확인 (생성된 지 5초 이내)
-  const isNewEditor = currentEditor ? Date.now() - currentEditor.createdAt.getTime() < 5000 : false
+  // 새로 생성된 에디터인지 확인
+  const isNewEditor = useMemo(() => {
+    if (!currentEditor) return false
+    return Date.now() - currentEditor.createdAt.getTime() < EDITOR_CONFIG.NEW_EDITOR_THRESHOLD
+  }, [currentEditor])
 
   return {
     currentEditor,
