@@ -4,7 +4,7 @@ import { Providers } from '@/providers/providers'
 
 export const metadata: Metadata = {
   title: 'Minimal - Notion',
-  description: 'Your personal workspace for notes and documents',
+  description: 'Minimal Notion App',
   generator: 'mindol',
 }
 
