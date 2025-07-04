@@ -2,9 +2,21 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useSession } from "next-auth/react";
+import { LayoutDashboard } from "lucide-react"; // Import the icon
 
 export default function LandingPage() {
   const { t, i18n } = useTranslation();
+  const { status } = useSession(); // Get session status
+
+  // Show loading state if session is still loading
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-100 dark:from-black dark:to-gray-900">
@@ -38,23 +50,39 @@ export default function LandingPage() {
         >
           {t('welcome.slogan')}
         </motion.p>
-        <motion.div
-          className="flex gap-3 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-        >
-          <Link href="/login">
-            <button className="px-5 py-2 rounded-xl bg-black/90 hover:bg-black text-white font-medium shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400">
-              {t('welcome.login')}
-            </button>
-          </Link>
-          <Link href="/register">
-            <button className="px-5 py-2 rounded-xl bg-white/80 hover:bg-white text-black font-medium border border-gray-300 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400">
-              {t('welcome.register')}
-            </button>
-          </Link>
-        </motion.div>
+        {status === "unauthenticated" && ( // Only render login/register buttons if user is unauthenticated
+          <motion.div
+            className="flex gap-3 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+          >
+            <Link href="/login">
+              <button className="px-5 py-2 rounded-xl bg-black/90 hover:bg-black text-white font-medium shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                {t('welcome.login')}
+              </button>
+            </Link>
+            <Link href="/register">
+              <button className="px-5 py-2 rounded-xl bg-white/80 hover:bg-white text-black font-medium border border-gray-300 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                {t('welcome.register')}
+              </button>
+            </Link>
+          </motion.div>
+        )}
+        {status === "authenticated" && ( // Render 'Go to Workspace' button if user is authenticated
+          <motion.div
+            className="flex gap-3 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+          >
+            <Link href="/workspace">
+              <button className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center gap-2">
+                <LayoutDashboard className="h-5 w-5" /> {t('welcome.goToWorkspace')}
+              </button>
+            </Link>
+          </motion.div>
+        )}
         <motion.div
           className="flex gap-2 justify-center"
           initial={{ opacity: 0, y: 20 }}
@@ -77,4 +105,4 @@ export default function LandingPage() {
       </motion.div>
     </div>
   );
-} 
+}

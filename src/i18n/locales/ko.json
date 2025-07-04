@@ -71,6 +71,7 @@
     "desc": "Notion처럼 심플하고 강력한 노트 웹앱",
     "slogan": "생산성을 높이는 최고의 노트 경험을 만나보세요!",
     "login": "로그인",
-    "register": "회원가입"
+    "register": "회원가입",
+    "goToWorkspace": "워크스페이스"
   }
 }

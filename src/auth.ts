@@ -40,7 +40,7 @@ export const authOptions: AuthOptions = {
 
         if (!isPasswordValid) {
           return null;
-        }
+        };
 
         return {
           id: user.id,
@@ -67,15 +67,27 @@ export const authOptions: AuthOptions = {
     strategy: "jwt" as SessionStrategy,
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account, profile }) {
+
       if (user) {
         token.id = user.id;
+      }
+      // If using an OAuth provider and need to persist provider-specific info
+      if (account) {
+        token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
+        token.provider = account.provider;
       }
       return token;
     },
     async session({ session, token }) {
+
       if (token && session.user) {
         session.user.id = token.id as string;
+        // If you stored additional info in token, pass it to session
+        if (token.accessToken) {
+          (session as any).accessToken = token.accessToken; // Add to session type if needed
+        }
       }
       return session;
     },

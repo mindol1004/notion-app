@@ -32,7 +32,6 @@ export function useEditorLogic() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      console.log("Editor saved via API:", editorId, data)
     } catch (error) {
       console.error("Failed to save editor via API:", error)
     }

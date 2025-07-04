@@ -71,6 +71,7 @@
     "desc": "A simple and powerful note web app like Notion",
     "slogan": "Experience the best note-taking for productivity!",
     "login": "Login",
-    "register": "Sign Up"
+    "register": "Sign Up",
+    "goToWorkspace": "WorkSpace"
   }
 }
